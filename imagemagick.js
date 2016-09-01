@@ -1,15 +1,19 @@
 var childproc = require('child_process'),
     EventEmitter = require('events').EventEmitter;
 
+exports.imOptions = { encoding: 'utf8'
+, timeout: 0
+, maxBuffer: 500*1024
+, killSignal: 'SIGKILL'
+, output: null
+};
+
+exports.setOption= function(name, value){
+  exports.imOptions[name] = value;
+};
 
 function exec2(file, args /*, options, callback */) {
-  var options = { encoding: 'utf8'
-                , timeout: 0
-                , maxBuffer: 500*1024
-                , killSignal: 'SIGKILL'
-                , output: null
-                };
-
+  var options = exports.imOptions;
   var callback = arguments[arguments.length-1];
   if ('function' != typeof callback) callback = null;
 
@@ -280,7 +284,7 @@ exports.crop = function (options, callback) {
     throw new TypeError("No srcPath or data defined");
   if (!options.height && !options.width)
     throw new TypeError("No width or height defined");
-  
+
   if (options.srcPath){
     var args = options.srcPath;
   } else {
